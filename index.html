@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Recipe Search</title>
+  <style>
+    body {
+      background-color: #ffe3a6;
+      margin: 0;
+      padding: 0;
+      font-family: 'Verdana', sans-serif;
+      padding-top: 70px;
+      /* Add padding to avoid content being hidden behind the fixed header */
+    }
+
+    header {
+      background-color: #FEB618;
+      padding: 20px 50px;
+      font-family: 'Times New Roman', Times, serif;
+      position: fixed;
+      /* Make header fixed */
+      top: 0;
+      width: 100%;
+      box-sizing: border-box;
+      /* Ensures padding is included in width */
+      z-index: 1000;
+      /* Keeps the header above other content */
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav ul {
+      list-style-type: none;
+      display: flex;
+    }
+
+    nav ul li {
+      margin-left: 20px;
+    }
+
+    nav ul li a {
+      color: #333;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #fff;
+    }
+
+    #main-box {
+      display: flex;
+      flex-direction: row;
+      width: 80%;
+      max-width: 1000px;
+      height: auto;
+      margin: 50px auto;
+      box-shadow: 0px 20px 20px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    #left-box,
+    #right-box {
+      width: 50%;
+      padding: 35px;
+      box-sizing: border-box;
+    }
+
+    #left-box {
+      background-color: #fff;
+    }
+
+    #right-box {
+      background-color: #FEB618;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    #right-box img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    h2 {
+      color: #FEB618;
+      font-size: 25px;
+      text-align: center;
+      margin-top: 0;
+    }
+
+    #left-box p {
+      font-size: 16px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .search {
+      text-align: center;
+    }
+
+    .search input[type="text"] {
+      padding: 10px;
+      border: none;
+      font-size: 18px;
+      background-color: #FEB618;
+      border-radius: 15px;
+      width: 80%;
+      max-width: 300px;
+    }
+
+    .search input[type="text"]:focus {
+      opacity: 0.7;
+      transition: opacity 0.5s ease-in;
+    }
+
+    .search button {
+      padding: 10px 14px;
+      background: #FEB618;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      border-radius: 15px;
+      margin-left: 10px;
+    }
+
+    #recipe-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 1200px;
+      margin: 50px auto;
+    }
+
+    #recipe-container .recipe {
+      width: 300px;
+      background-color: #fff;
+      border-radius: 15px;
+      margin: 15px;
+      padding: 15px;
+      box-shadow: 0px 20px 20px 5px rgba(0, 0, 0, 0.2);
+      box-sizing: border-box;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    #recipe-container .recipe:hover {
+      transform: scale(1.05);
+    }
+
+    #recipe-container img {
+      display: block;
+      width: 100%;
+      max-width: 250px;
+      margin: auto;
+    }
+
+    .recipe-title {
+      background-color: #FEB618;
+      padding: 4px 6px;
+      display: block;
+      margin: 15px auto;
+      font-size: 18px;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .recipe-text {
+      text-align: left;
+    }
+
+    .error-message {
+      display: block;
+      width: 80%;
+      max-width: 400px;
+      height: auto;
+      padding: 20px;
+      font-size: 20px;
+      text-align: center;
+      margin: 50px auto;
+      border-radius: 15px;
+      background-image: url('https://i.gyazo.com/de52380ec7bc2ee273158088c046ef1f.png');
+      background-color: #fff;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    @media (max-width: 767px) {
+      #main-box {
+        flex-direction: column;
+        width: 90%;
+        margin: 15% auto;
+      }
+
+      #left-box,
+      #right-box {
+        width: 100%;
+        padding: 20px;
+      }
+
+      #right-box {
+        height: 200px;
+      }
+
+      #recipe-container .recipe {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .recipe-title {
+        font-size: 16px;
+      }
+
+      .error-message {
+        width: 90%;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-container">
+      <h1>SpEcTraL</h1>
+      <nav>
+        <ul>
+          <li><a href="#left-box">Home</a></li>
+          <li><a href="#recipe-container">Recipes</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div id="main-box">
+    <div id="left-box">
+      <h2>Looking for something delicious?</h2>
+      <p>Find all the flavors that enhance your taste buds while staying healthy.</p>
+      <div class="search">
+        <input type="text" id="txtSearch" placeholder="Find your recipes!">
+        <button class="searchbtn"><i class="fa fa-search"></i></button>
+      </div>
+    </div>
+    <div id="right-box">
+      <img src="https://i.gyazo.com/4ccf0e18c9e5098fdad45ef226a9f27c.jpg" alt="Trini Curry">
+    </div>
+  </div>
+  <div id="recipe-container"></div> <!-- Results will go here -->
+  <script>
+    const recipeContainer = document.querySelector('#recipe-container');
+    const txtSearch = document.querySelector("#txtSearch");
+    const btnSearch = document.querySelector(".searchbtn");
+
+    txtSearch.addEventListener("keyup", (e) => {
+      if (e.keyCode === 13) {
+        loadRecipes(txtSearch.value);
+      }
+    });
+
+    btnSearch.addEventListener("click", () => {
+      loadRecipes(txtSearch.value);
+    });
+
+    function displayError(message) {
+      const errorContainer = document.createElement('div');
+      errorContainer.classList.add('error-message');
+      errorContainer.textContent = message;
+      recipeContainer.innerHTML = '';
+      recipeContainer.appendChild(errorContainer);
+    }
+
+    function loadRecipes(searchQuery = "") {
+      const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(searchQuery)}`;
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (!data.meals) {
+            displayError('Recipe not found');
+          } else {
+            renderRecipes(data.meals);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          displayError('Failed to fetch recipes');
+        });
+    }
+
+    function renderRecipes(meals) {
+      recipeContainer.innerHTML = "";
+      meals.forEach(meal => {
+        const ingredients = []; // Array to hold ingredients and their measurements
+        // Loop through the meal object to find ingredients
+        for (let i = 1; i <= 20; i++) {
+          if (meal[`strIngredient${i}`]) {
+            ingredients.push(`${meal[`strIngredient${i}`]} - ${meal[`strMeasure${i}`]}`);
+          } else {
+            break; // Stop if there are no more ingredients
+          }
+        }
+        const ingredientsHTML = ingredients.map(ing => `<li>${ing}</li>`).join('');
+        const htmlStr = `
+                <div class="recipe" onclick="showRecipeDetails('${meal.idMeal}')">
+                    <div class="recipe-image">
+                        <img src="${meal.strMealThumb}" alt="${meal.strMeal}" />
+                    </div>
+                    <div class="recipe-title">${meal.strMeal}</div>
+                    <ul class="ingredients-list">${ingredientsHTML}</ul> <!-- Display ingredients here -->
+                </div>
+            `;
+        recipeContainer.insertAdjacentHTML("beforeend", htmlStr);
+      });
+    }
+
+
+    function showRecipeDetails(mealId) {
+      const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`;
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const meal = data.meals[0];
+          const instructions = meal.strInstructions.split('.').map(step => step.trim()).filter(step => step.length > 0);
+          const instructionsHTML = instructions.map(step => `<li>${step}.</li>`).join('');
+          const detailHTML = `
+          <div style="padding:20px; background-color: #fffdd0; border-radius: 15px; box-shadow: 0px 20px 20px 5px rgba(0, 0, 0, 0.2);">
+            <h2>${meal.strMeal}</h2>
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" style="width:100%; max-width:250px; margin: auto; display: block;">
+            <ul>${instructionsHTML}</ul>
+          </div>
+        `;
+          recipeContainer.innerHTML = '';
+          recipeContainer.insertAdjacentHTML("beforeend", detailHTML);
+        })
+        .catch(error => {
+          console.log(error);
+          displayError('Failed to load recipe details');
+        });
+    }
+  </script>
+</body>
+
+</html>
